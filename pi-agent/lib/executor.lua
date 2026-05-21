@@ -72,12 +72,14 @@ end
 
 function executor.extractLua(text)
     local luaCode = {}
-    -- Match blocks starting with ```lua and ending with ```
-    -- Handles both ```lua\n...``` and ```lua...```
-    for block in text:gmatch("```lua%s*(.-)%s*```") do
-        -- Remove potential leading/trailing newlines that might have been captured
-        local cleaned = block:gsub("^%s*\n", ""):gsub("\n%s*$", "")
-        table.insert(luaCode, cleaned)
+    -- Match blocks: ```[lang] [code] ```
+    -- %s* matches optional whitespace, (.-) captures the code non-greedily
+    for lang, block in text:gmatch("```([%a]*)%s*(.-)%s*```") do
+        if lang == "" or lang == "lua" then
+            -- Trim leading/trailing newlines from the captured block
+            local cleaned = block:gsub("^%s*\n", ""):gsub("\n%s*$", "")
+            table.insert(luaCode, cleaned)
+        end
     end
 
     if #luaCode > 0 then

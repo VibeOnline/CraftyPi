@@ -46,65 +46,57 @@ local function processRequest(input, messages, history, isCli)
         lastMessageStart = ui.printMessage("Pi", "", history)
     end
 
-    local fullResponse = ""
-    local success, usage = api.streamChat(messages, function(chunk)
-        fullResponse = fullResponse .. chunk
-        if isCli then
-            term.write(chunk)
-        else
-            ui.updateLastMessage(fullResponse, colors.lightBlue, colors.black, history, lastMessageStart)
-            renderWithStats("", "Working...")
-            os.sleep(0.1)
-        end
-    end)
-    
-    if isCli then print() end
+    local isFirstTurn = true
+    while true do
+        local fullResponse = ""
+        local success, usage = api.streamChat(messages, function(chunk)
+            fullResponse = fullResponse .. chunk
+            if isCli then
+                term.write(chunk)
+            else
+                ui.updateLastMessage(fullResponse, colors.lightBlue, colors.black, history, lastMessageStart)
+                renderWithStats("", "Working...")
+                os.sleep(0.1)
+            end
+        end)
+        
+        if isCli then term.write("\n") end
 
-    if success then
+        if not success then
+            if isCli then
+                term.write("\nError: Unknown error occurred\n")
+            else
+                ui.printMessage("Error", "Unknown error occurred", history)
+            end
+            break
+        end
+
         if not isCli then updateTokenStats(usage) end
         table.insert(messages, { role = "assistant", content = fullResponse })
         
         local code = executor.extractLua(fullResponse)
-        if code then
-            local successExec, result = executor.execute(code)
-            local containsError = not successExec or (type(result) == "string" and result:find("^Error:"))
-            local executeMsg = result or "Unknown error"
-            
-            if isCli then
-                print("\nExecution result:\n" .. executeMsg)
-            else
-                ui.printBlock(executeMsg, containsError and colors.red or colors.green, history)
-            end
-            
-            table.insert(messages, { role = "user", content = "Execution result: " .. executeMsg })
-            
-            if not isCli then
-                renderWithStats("", "Working...")
-                lastMessageStart = ui.printMessage("Pi", "", history)
-            end
-            
-            local followUpFull = ""
-            local successFollow, usageFollow = api.streamChat(messages, function(chunk)
-                followUpFull = followUpFull .. chunk
-                if isCli then
-                    term.write(chunk)
-                else
-                    ui.updateLastMessage(followUpFull, colors.lightBlue, colors.black, history, lastMessageStart)
-                    renderWithStats("", "Working...")
-                    os.sleep(0.05)
-                end
-            end)
-            
-            if isCli then print() end
-            if not isCli then updateTokenStats(usageFollow) end
-            table.insert(messages, { role = "assistant", content = followUpFull })
+        if not code then
+            break
         end
-    else
+
+        local successExec, result = executor.execute(code)
+        local containsError = not successExec or (type(result) == "string" and result:find("^Error:"))
+        local executeMsg = result or "Unknown error"
+        
         if isCli then
-            print("\nError: Unknown error occurred")
+            term.write("\nExecution result:\n" .. executeMsg .. "\n")
         else
-            ui.printMessage("Error", "Unknown error occurred", history)
+            ui.printBlock(executeMsg, containsError and colors.red or colors.green, history)
         end
+        
+        table.insert(messages, { role = "user", content = "Execution result: " .. executeMsg })
+        
+        if not isCli then
+            renderWithStats("", "Working...")
+            lastMessageStart = ui.printMessage("Pi", "", history)
+        end
+        
+        isFirstTurn = false
     end
 end
 
