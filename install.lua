@@ -2,7 +2,7 @@
 -- Installer for the Pi Coding Agent
 -- Usage: Run this file via 'lua' or 'shell.run' after downloading.
 
-local BASE_URL = "https://raw.githubusercontent.com/VibeOnline/CraftyPi/main/"
+local BASE_URL = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/"
 
 local FILES = {
     "pi.lua",
