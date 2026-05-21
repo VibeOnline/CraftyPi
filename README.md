@@ -1,3 +1,5 @@
+This project was generated using the official [Pi agent](https://pi.dev) with ```gemma4:31b-cloud``` from [Ollama](https://ollama.com)
+
 # Pi Coding Agent 🤖
 
 Pi is an expert coding assistant operating directly inside a **CraftOS (CC: Tweaked)** environment. It leverages Large Language Models to help you write, debug, and manage Lua code, automate filesystem tasks, and execute shell commands—all from within the game.
@@ -16,8 +18,8 @@ Pi is an expert coding assistant operating directly inside a **CraftOS (CC: Twea
 
 The easiest way to install Pi is via the bootstrapper script. Run the following command in your computer's terminal:
 
-```lua
-lua https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/install.lua
+```bash
+wget run https://raw.githubusercontent.com/VibeOnline/CraftyPi/main/install.lua
 ```
 
 *(Replace the URL with the actual link to the `install.lua` script in your release)*
@@ -27,7 +29,7 @@ lua https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/install.lua
 Once installed, you can launch the agent by running:
 
 ```bash
-@pi.lua
+pi
 ```
 
 ### Basic Interaction
@@ -46,4 +48,3 @@ Once installed, you can launch the agent by running:
 ## ⚠️ Limitations
 
 - **Unicode**: Only symbols supported by CraftOS are rendered. See `pi-agent/docs/symbols.md` for the full list.
-- **Permissions**: The agent can only access files and directories that the current user has permission to modify.
