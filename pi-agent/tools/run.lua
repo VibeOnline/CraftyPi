@@ -15,8 +15,16 @@ local function logger(...)
     table.insert(log, table.concat({...}, " "))
 end
 
-_G.term.write = logger
-_G.print = logger
+_G.term.write = function(...)
+    oldTermWrite(...)
+    
+    logger(...)
+end
+_G.print = function(...)
+    oldPrint(...)
+
+    logger(...)
+end
 
 local success, err = pcall(function()
     return shell.run(program, table.unpack(cmd))
