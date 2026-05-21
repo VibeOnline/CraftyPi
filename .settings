@@ -1,6 +1,0 @@
-{
-  pi_api_key = "c074b421ca474d0789ec72a2065424d7.ghjbNoUkrwouFaeclfa1ru3X",
-  pi_model = "gemma4:31b-cloud",
-  pi_api_url = "https://ollama.com",
-  [ "motd.enable" ] = false,
-}
