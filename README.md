@@ -18,8 +18,8 @@ Pi is an expert coding assistant operating directly inside a **CraftOS (CC: Twea
 
 The easiest way to install Pi is via the bootstrapper script. Run the following command in your computer's terminal:
 
-```lua
-lua https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/install.lua
+```bash
+wget run https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/install.lua
 ```
 
 *(Replace the URL with the actual link to the `install.lua` script in your release)*
@@ -29,7 +29,7 @@ lua https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/install.lua
 Once installed, you can launch the agent by running:
 
 ```bash
-@pi.lua
+pi
 ```
 
 ### Basic Interaction
@@ -48,4 +48,3 @@ Once installed, you can launch the agent by running:
 ## ⚠️ Limitations
 
 - **Unicode**: Only symbols supported by CraftOS are rendered. See `pi-agent/docs/symbols.md` for the full list.
-- **Permissions**: The agent can only access files and directories that the current user has permission to modify.
