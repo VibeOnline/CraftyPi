@@ -11,7 +11,7 @@ local function getAvailableTools()
             toolList[toolName] = function(...)
                 local args = {...}
                 -- Log the action to the executor's output buffer
-                print(string.format("Tool: %s %s", toolName, table.concat(args, " ")))
+                print(string.format("%s %s", toolName, table.concat(args, " ")))
                 
                 local result = tools.call(toolName, ...)
                 
