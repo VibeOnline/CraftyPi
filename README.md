@@ -19,7 +19,7 @@ Pi is an expert coding assistant operating directly inside a **CraftOS (CC: Twea
 The easiest way to install Pi is via the bootstrapper script. Run the following command in your computer's terminal:
 
 ```bash
-wget run https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/install.lua
+wget run https://raw.githubusercontent.com/VibeOnline/CraftyPi/main/install.lua
 ```
 
 *(Replace the URL with the actual link to the `install.lua` script in your release)*
