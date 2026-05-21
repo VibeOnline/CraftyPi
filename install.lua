@@ -6,18 +6,41 @@ local BASE_URL = "https://raw.githubusercontent.com/VibeOnline/CraftyPi/main/"
 
 local FILES = {
     "pi.lua",
+    "pi-agent/README.md",
+    "pi-agent/docs/api_overview.md",
+    "pi-agent/docs/colors.md",
+    "pi-agent/docs/fs.md",
+    "pi-agent/docs/gps.md",
+    "pi-agent/docs/http.md",
+    "pi-agent/docs/keys.md",
+    "pi-agent/docs/os.md",
+    "pi-agent/docs/paintutils.md",
+    "pi-agent/docs/parallel.md",
+    "pi-agent/docs/rednet.md",
+    "pi-agent/docs/redstone.md",
+    "pi-agent/docs/shell.md",
+    "pi-agent/docs/symbols.md",
+    "pi-agent/docs/term.md",
+    "pi-agent/docs/tui.md",
+    "pi-agent/docs/textutils.md",
+    "pi-agent/docs/window.md",
+    "pi-agent/examples/README.md",
+    "pi-agent/examples/01_fs_backup.lua",
+    "pi-agent/examples/02_redstone_toggle.lua",
+    "pi-agent/examples/03_rednet_chat.lua",
+    "pi-agent/examples/04_gps_locate.lua",
+    "pi-agent/examples/05_parallel_input.lua",
+    "pi-agent/examples/06_http_request.lua",
+    "pi-agent/lib/api.lua",
+    "pi-agent/lib/commands.lua",
     "pi-agent/lib/config.lua",
     "pi-agent/lib/executor.lua",
     "pi-agent/lib/prompt.lua",
     "pi-agent/lib/tools.lua",
     "pi-agent/lib/ui.lua",
     "pi-agent/tools/read.lua",
-    "pi-agent/tools/write.lua",
     "pi-agent/tools/run.lua",
-    "pi-agent/docs/api_overview.md",
-    "pi-agent/docs/symbols.md",
-    "pi-agent/docs/term.md",
-    "pi-agent/docs/tui.md",
+    "pi-agent/tools/write.lua",
 }
 
 local function createDirRecursive(path)
@@ -52,6 +75,7 @@ local function install()
         
         -- Update status line
         term.setCursorPos(1, 6)
+        term.clearLine()
         print(string.format("[%3d%%] Downloading %s...", progress, path))
 
         -- Ensure directory exists
@@ -71,9 +95,13 @@ local function install()
             return false
         end
 
+        -- Read content from response handle
+        local content = response.readAll()
+        response.close()
+
         -- Save file
         local file = fs.open(path, "w")
-        file.write(response)
+        file.write(content)
         file.close()
     end
 
@@ -82,7 +110,7 @@ local function install()
     print("\n\nInstallation Complete!")
     term.setTextColor(colors.white)
     print("You can now start the agent by running:")
-    print("\n    @pi.lua\n")
+    print("\n    pi\n")
     print("----------------------------------------")
     return true
 end
