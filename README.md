@@ -1,4 +1,6 @@
-# Pi Coding Agent 🤖
+This project was generated using the official [Pi agent](https://pi.dev) with ```gemma4:31b-cloud``` from [Ollama](https://ollama.com)
+
+# Pi Coding Agent for ComputerCraft 🤖
 
 Pi is an expert coding assistant operating directly inside a **CraftOS (CC: Tweaked)** environment. It leverages Large Language Models to help you write, debug, and manage Lua code, automate filesystem tasks, and execute shell commands—all from within the game.
 
