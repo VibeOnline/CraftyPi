@@ -38,7 +38,9 @@ function executor.execute(code)
 
     -- Discover and inject tool functions
     local toolFunctions = getAvailableTools()
-    _G.pi = toolFunctions
+    for name, func in pairs(toolFunctions) do
+        _G[name] = func
+    end
 
     -- Ensure CraftOS globals are available in the environment
     -- In some cases, chunks loaded via loadfile might not see _G if
@@ -59,11 +61,9 @@ function executor.execute(code)
 
     local success, runtimeErr = pcall(func)
     print = oldPrint
-    _G.pi = nil
+    for name, _ in pairs(toolFunctions) do _G[name] = nil end
 
     if not success then
-        print = oldPrint
-        _G.pi = nil
         return false, "Runtime error: " .. runtimeErr
     end
 

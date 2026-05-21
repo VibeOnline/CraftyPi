@@ -55,4 +55,3 @@ Events can be captured via `os.pullEvent()` or `os.pullEventRaw()`:
 ## Reference
 
 - **symbols**: Available characters in the CraftOS character set.
-- **tui**: Guide on building TUI applications.

@@ -1,125 +1,255 @@
-# Available Symbols in CraftOS
+Below is a list of the ONLY available characters in CraftOS. This list is formatted as such "(Standard unicode) = (CraftOS unicode)".
 
-This is the definitive list of all characters available in the CraftOS environment. The agent **MUST ONLY** use these characters in its output. Any character not appearing in this list—including emojis, fancy unicode symbols, or extended ASCII not listed here—will not be rendered correctly and may lead to corrupted display or BIOS-level artifacts.
-
-When generating strings or code intended to be printed to the terminal, the agent should use the **code format** (e.g., `\0`, `\14`) rather than the literal symbol. This ensures that the correct character is emitted regardless of the LLM's encoding or the environment's font handling.
-
-The list below provides the mapping between the standard representation and the internal CraftOS character code.
-
-## Control and Graphic Symbols (0-31)
-
-| Symbol | Code | Description |
-| :--- | :--- | :--- |
-| `NUL` | `\0` | Null character |
-| `☺` | `\1` | Smiling face |
-| `☻` | `\2` | Slightly smiling face |
-| `♥` | `\3` | Heart |
-| `♦` | `\4` | Diamond |
-| `♣` | `\5` | Club |
-| `♠` | `\6` | Spade |
-| `•` | `\7` | Bullet point |
-| `◘` | `\8` | Inverted bullet |
-| `♂` | `\11` | Male symbol |
-| `♀` | `\12` | Female symbol |
-| `♪` | `\14` | Eighth note |
-| `♫` | `\15` | Beamed eighth notes |
-| `►` | `\16` | Right-pointing triangle (arrow) |
-| `◄` | `\17` | Left-pointing triangle (arrow) |
-| `↕` | `\18` | Up-down arrow |
-| `‼` | `\19` | Double exclamation mark |
-| `¶` | `\20` | Paragraph sign |
-| `§` | `\21` | Section sign |
-| `▬` | `\22` | Horizontal bar/dash |
-| `↨` | `\23` | Up-down arrow (alternative) |
-| `↑` | `\24` | Up arrow |
-| `↓` | `\25` | Down arrow |
-| `→` | `\26` | Right arrow |
-| `←` | `\27` | Left arrow |
-| `∟` | `\28` | Right angle (corner) |
-| `↔` | `\29` | Left-right arrow |
-| `▲` | `\30` | Upward triangle |
-| `▼` | `\31` | Downward triangle |
-
-## Standard Punctuation and Symbols (32-126)
-
-| Symbol | Code | Description |
-| :--- | :--- | :--- |
-| `SP` | `\32` | Space |
-| `!` | `\33` | Exclamation mark |
-| `"` | `\34` | Double quote |
-| `#` | `\35` | Hash / Number sign |
-| `$` | `\36` | Dollar sign |
-| `%` | `\37` | Percent sign |
-| `&` | `\38` | Ampersand |
-| `'` | `\39` | Single quote / Apostrophe |
-| `(` | `\40` | Left parenthesis |
-| `)` | `\41` | Right parenthesis |
-| `*` | `\42` | Asterisk |
-| `+` | `\43` | Plus sign |
-| `,` | `\44` | Comma |
-| `-` | `\45` | Hyphen / Minus sign |
-| `.` | `\46` | Period / Dot |
-| `/` | `\47` | Forward slash |
-| `:` | `\58` | Colon |
-| `;` | `\59` | Semicolon |
-| `<` | `\60` | Less-than sign |
-| `=` | `\61` | Equals sign |
-| `>` | `\62` | Greater-than sign |
-| `?` | `\63` | Question mark |
-| `@` | `\64` | At symbol |
-| `[` | `\91` | Left square bracket |
-| `\` | `\92` | Backslash |
-| `]` | `\93` | Right square bracket |
-| `^` | `\94` | Caret / Circumflex |
-| `_` | `\95` | Underscore |
-| `\`` | `\96` | Backtick / Grave accent |
-| `{` | `\123` | Left curly brace |
-| `|` | `\124` | Vertical bar / Pipe |
-| `}` | `\125` | Right curly brace |
-| `~` | `\126` | Tilde |
-
-## Extended Character Set (127-255)
-
-These characters include UI elements, box-drawing symbols, and extended Latin characters.
-
-| Symbol | Code | Description |
-| :--- | :--- | :--- |
-| `🮙` | `\127` | Delete / Control character |
-| `EMQ` | `\128` | Custom UI element |
-| `🬀` to `🬏` | `\129`-\`\144` | Box-drawing / UI elements |
-| `🬐` to `🬗` | `\145`-\`\153` | Box-drawing / UI elements |
-| `🬘` to `🬝` | `\154`-\`\159` | Box-drawing / UI elements |
-| `▌` | `\149` | Left half-block |
-| `NBSP` | `\160` | Non-breaking space |
-| `¡` | `\161` | Inverted exclamation mark |
-| `¢` | `\162` | Cent sign |
-| `£` | `\163` | Pound sign |
-| `¤` | `\164` | Currency sign |
-| `¥` | `\165` | Yen sign |
-| `¦` | `\166` | Broken bar |
-| `§` | `\167` | Section sign |
-| `¨` | `\168` | Diaeresis / Umlaut |
-| `©` | `\169` | Copyright symbol |
-| `ª` | `\170` | Feminine ordinal indicator |
-| `«` | `\171` | Left-pointing double angle quotation mark |
-| `¬` | `\172` | Not sign |
-| `SHY` | `\173` | Soft hyphen |
-| `®` | `\174` | Registered trademark symbol |
-| `¯` | `\175` | Macron |
-| `°` | `\176` | Degree symbol |
-| `±` | `\177` | Plus-minus sign |
-| `²` | `\178` | Superscript two |
-| `³` | `\179` | Superscript three |
-| `´` | `\180` | Acute accent |
-| `µ` | `\181` | Micro sign |
-| `¶` | `\182` | Paragraph sign |
-| `·` | `\183` | Middle dot |
-| `¸` | `\184` | Cedilla |
-| `¹` | `\185` | Superscript one |
-| `º` | `\186` | Masculine ordinal indicator |
-| `»` | `\187` | Right-pointing double angle quotation mark |
-| `¼` | `\188` | Quarter fraction |
-| `½` | `\189` | Half fraction |
-| `¾` | `\190` | Three-quarters fraction |
-| `¿` | `\191` | Inverted question mark |
-| `À` to `ÿ` | `\192`-\`\255` | Extended Latin characters (Accented) |
+NUL = \0
+☺ = \1
+☻ = \2
+♥ = \3
+♦ = \4
+♣ = \5
+♠ = \6
+• = \7
+◘ = \8
+♂ = \11
+♀ = \12
+♪ = \14
+♫ = \15
+► = \16
+◄ = \17
+↕ = \18
+‼ = \19
+¶ = \20
+§ = \21
+▬ = \22
+↨ = \23
+↑ = \24
+↓ = \25
+→ = \26
+← = \27
+∟ = \28
+↔ = \29
+▲ = \30
+▼ = \31
+SP = \32
+! = \33
+" = \34
+# = \35
+$ = \36
+% = \37
+& = \38
+' = \39
+( = \40
+) = \41
+* = \42
++ = \43
+, = \44
+- = \45
+. = \46
+/ = \47
+0 = \48
+1 = \49
+2 = \50
+3 = \51
+4 = \52
+5 = \53
+6 = \54
+7 = \55
+8 = \56
+9 = \57
+: = \58
+; = \59
+< = \60
+= = \61
+> = \62
+? = \63
+@ = \64
+A = \65
+B = \66
+C = \67
+D = \68
+E = \69
+F = \70
+G = \71
+H = \72
+I = \73
+J = \74
+K = \75
+L = \76
+M = \77
+N = \78
+O = \79
+P = \80
+Q = \81
+R = \82
+S = \83
+T = \84
+U = \85
+V = \86
+W = \87
+X = \88
+Y = \89
+Z = \90
+[ = \91
+\ = \92
+] = \93
+^ = \94
+_ = \95
+` = \96
+a = \97
+b = \98
+c = \99
+d = \100
+e = \101
+f = \102
+g = \103
+h = \104
+i = \105
+j = \106
+k = \107
+l = \108
+m = \109
+n = \110
+o = \111
+p = \112
+q = \113
+r = \114
+s = \115
+t = \116
+u = \117
+v = \118
+w = \119
+x = \120
+y = \121
+z = \122
+{ = \123
+| = \124
+} = \125
+~ = \126
+🮙 = \127
+EMQ = \128
+🬀 = \129
+🬁 = \130
+🬂 = \131
+🬃 = \132
+🬄 = \133
+🬅 = \134
+🬆 = \135
+🬇 = \136
+🬈 = \137
+🬉 = \138
+🬊 = \139
+🬋 = \140
+🬌 = \141
+🬍 = \142
+🬎 = \143
+🬏 = \144
+🬐 = \145
+🬑 = \146
+🬒 = \147
+🬓 = \148
+▌ = \149
+🬔 = \150
+🬕 = \151
+🬖 = \152
+🬗 = \153
+🬘 = \154
+🬙 = \155
+🬚 = \156
+🬛 = \157
+🬜 = \158
+🬝 = \159
+NBSP = \160
+¡ = \161
+¢ = \162
+£ = \163
+¤ = \164
+¥ = \165
+¦ = \166
+§ = \167
+¨ = \168
+© = \169
+ª = \170
+« = \171
+¬ = \172
+SHY = \173
+® = \174
+¯ = \175
+° = \176
+± = \177
+² = \178
+³ = \179
+´ = \180
+µ = \181
+¶ = \182
+· = \183
+¸ = \184
+¹ = \185
+º = \186
+» = \187
+¼ = \188
+½ = \189
+¾ = \190
+¿ = \191
+À = \192
+Á = \193
+Â = \194
+Ã = \195
+Ä = \196
+Å = \197
+Æ = \198
+Ç = \199
+È = \200
+É = \201
+Ê = \202
+Ë = \203
+Ì = \204
+Í = \205
+Î = \206
+Ï = \207
+Ð = \208
+Ñ = \209
+Ò = \210
+Ó = \211
+Ô = \212
+Õ = \213
+Ö = \214
+× = \215
+Ø = \216
+Ù = \217
+Ú = \218
+Û = \219
+Ü = \220
+Ý = \221
+Þ = \222
+ß = \223
+à = \224
+á = \225
+â = \226
+ã = \227
+ä = \228
+å = \229
+æ = \230
+ç = \231
+è = \232
+é = \233
+ê = \234
+ë = \235
+ì = \236
+í = \237
+î = \238
+ï = \239
+ð = \240
+ñ = \241
+ò = \242
+ó = \243
+ô = \244
+õ = \245
+ö = \246
+÷ = \247
+ø = \248
+ù = \249
+ú = \250
+û = \251
+ü = \252
+ý = \253
+þ = \254
+ÿ = \255

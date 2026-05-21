@@ -68,9 +68,8 @@ function prompt.build(options)
     local tools = selectedTools or {"read", "write", "run"}
     local visibleTools = {}
     for _, name in ipairs(tools) do
-        local displayName = "pi." .. name
         if toolSnippets and toolSnippets[name] then
-            table.insert(visibleTools, displayName)
+            table.insert(visibleTools, name)
         else
             local desc = ""
             if name == "read" then desc = "Read a file's content"
@@ -78,7 +77,7 @@ function prompt.build(options)
             elseif name == "run" then desc = "Run a shell command via shell.run"
             end
             if desc ~= "" then
-                table.insert(visibleTools, displayName .. ": " .. desc)
+                table.insert(visibleTools, name .. ": " .. desc)
             end
         end
     end
@@ -87,9 +86,9 @@ function prompt.build(options)
     if #visibleTools > 0 then
         local list = {}
         for i, item in ipairs(visibleTools) do
-            local name = item:match("^pi%.(.-):") or item:match("^pi%.(.-)$")
+            local name = item:match("^(.-):") or item
             if toolSnippets and toolSnippets[name] then
-                table.insert(list, string.format("- %s: %s", item, toolSnippets[name]))
+                table.insert(list, string.format("- %s: %s", name, toolSnippets[name]))
             else
                 table.insert(list, "- " .. item)
             end
@@ -123,7 +122,6 @@ function prompt.build(options)
     addGuideline("To use any tool, you MUST wrap the function call inside a markdown Lua code block (```lua\n ... \n```)")
     addGuideline("Only use the tool that is actually required for the request. For example, do not use the 'write' tool if the user only asked for a command to be run.")
     addGuideline("Call tools directly. Do not attempt to create complex Lua scripts, loops, or logic to manage tool outputs. Call the tool, let the system return the result, and then react to that result in your next message.")
-    addGuideline("Before using any non-alphanumeric symbols or ASCII characters, you MUST read 'pi-agent/docs/symbols.md' to ensure the symbols are compatible with the environment.")
 
     local guidelines = ""
     for i, g in ipairs(guidelinesList) do
