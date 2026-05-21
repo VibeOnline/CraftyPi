@@ -35,6 +35,79 @@ local function renderWithStats(inputBuffer, status)
     })
 end
 
+local function processRequest(input, messages, history, isCli)
+    if not isCli then
+        ui.printMessage("You", input, history)
+    end
+    table.insert(messages, { role = "user", content = input })
+    
+    if not isCli then
+        renderWithStats("", "Working...")
+        lastMessageStart = ui.printMessage("Pi", "", history)
+    end
+
+    local fullResponse = ""
+    local success, usage = api.streamChat(messages, function(chunk)
+        fullResponse = fullResponse .. chunk
+        if isCli then
+            term.write(chunk)
+        else
+            ui.updateLastMessage(fullResponse, colors.lightBlue, colors.black, history, lastMessageStart)
+            renderWithStats("", "Working...")
+            os.sleep(0.1)
+        end
+    end)
+    
+    if isCli then print() end
+
+    if success then
+        if not isCli then updateTokenStats(usage) end
+        table.insert(messages, { role = "assistant", content = fullResponse })
+        
+        local code = executor.extractLua(fullResponse)
+        if code then
+            local successExec, result = executor.execute(code)
+            local containsError = not successExec or (type(result) == "string" and result:find("^Error:"))
+            local executeMsg = result or "Unknown error"
+            
+            if isCli then
+                print("\nExecution result:\n" .. executeMsg)
+            else
+                ui.printBlock(executeMsg, containsError and colors.red or colors.green, history)
+            end
+            
+            table.insert(messages, { role = "user", content = "Execution result: " .. executeMsg })
+            
+            if not isCli then
+                renderWithStats("", "Working...")
+                lastMessageStart = ui.printMessage("Pi", "", history)
+            end
+            
+            local followUpFull = ""
+            local successFollow, usageFollow = api.streamChat(messages, function(chunk)
+                followUpFull = followUpFull .. chunk
+                if isCli then
+                    term.write(chunk)
+                else
+                    ui.updateLastMessage(followUpFull, colors.lightBlue, colors.black, history, lastMessageStart)
+                    renderWithStats("", "Working...")
+                    os.sleep(0.05)
+                end
+            end)
+            
+            if isCli then print() end
+            if not isCli then updateTokenStats(usageFollow) end
+            table.insert(messages, { role = "assistant", content = followUpFull })
+        end
+    else
+        if isCli then
+            print("\nError: Unknown error occurred")
+        else
+            ui.printMessage("Error", "Unknown error occurred", history)
+        end
+    end
+end
+
 local function run()
     ui.clearScreen()
     
@@ -47,8 +120,6 @@ local function run()
     end
 
     while true do
-        -- We need to pass the current token stats to render.
-        -- I'll modify render to accept tokens.
         renderWithStats("", "")
         
         local input = ui.getUserInput(function(currentInput)
@@ -78,60 +149,21 @@ local function run()
             ui.printMessage("System", "Chat renamed to: " .. chatName, history)
             goto continue
         elseif cmdResult ~= nil then
-            -- Other commands already printed messages
             goto continue
         end
 
-        ui.printMessage("You", input, history)
-        table.insert(messages, { role = "user", content = input })
         scrollPos = 0
-        
-        renderWithStats("", "Working...")
-        lastMessageStart = ui.printMessage("Pi", "", history)
-        
-        local fullResponse = ""
-        local success, usage = api.streamChat(messages, function(chunk)
-            fullResponse = fullResponse .. chunk
-            ui.updateLastMessage(fullResponse, colors.lightBlue, colors.black, history, lastMessageStart)
-            renderWithStats("", "Working...")
-            os.sleep(0.1)
-        end)
-        
-        if success then
-            updateTokenStats(usage)
-            table.insert(messages, { role = "assistant", content = fullResponse })
-            
-            local code = executor.extractLua(fullResponse)
-            if code then
-                local successExec, result = executor.execute(code)
-                
-                -- Detect if result contains "Error:", which implies a tool failure
-                -- even if the Lua execution itself was successful.
-                local containsError = not successExec or (type(result) == "string" and result:find("^Error:"))
-                local executeMsg = result or "Unknown error"
-                
-                ui.printBlock(executeMsg, containsError and colors.red or colors.green, history)
-                table.insert(messages, { role = "user", content = "Execution result: " .. executeMsg })
-                
-                renderWithStats("", "Working...")
-                lastMessageStart = ui.printMessage("Pi", "", history)
-                local followUpFull = ""
-                local successFollow, usageFollow = api.streamChat(messages, function(chunk)
-                    followUpFull = followUpFull .. chunk
-                    ui.updateLastMessage(followUpFull, colors.lightBlue, colors.black, history, lastMessageStart)
-                    renderWithStats("", "Working...")
-                    os.sleep(0.05)
-                end)
-                updateTokenStats(usageFollow)
-                table.insert(messages, { role = "assistant", content = followUpFull })
-            end
-        else
-            ui.printMessage("Error", "Unknown error occurred", history)
-        end
+        processRequest(input, messages, history, false)
         ::continue::
     end
 end
 
--- we need to override ui.render to take the stats
--- but I'll just modify lib/ui.lua instead for a cleaner design.
-run()
+if #arg > 0 then
+    local input = table.concat(arg, " ")
+    local cliMessages = {
+        { role = "system", content = prompt.build(config) }
+    }
+    processRequest(input, cliMessages, {}, true)
+else
+    run()
+end
